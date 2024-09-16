@@ -21,4 +21,9 @@ public class UsuarioController {
         return new ResponseEntity<>(usuarioService.crearUsuario(usuarioRequest), HttpStatus.CREATED);
     }
 
+    @GetMapping("/{dni}")
+    public ResponseEntity<UsuarioResponse> buscarUsuario(@PathVariable("dni") String dni) {
+        return new ResponseEntity<>(usuarioService.buscarUsuario(dni), HttpStatus.OK);
+    }
+
 }

@@ -5,4 +5,6 @@ import com.spring.exam.spring_exam.aggregates.response.UsuarioResponse;
 
 public interface UsuarioService {
     UsuarioResponse crearUsuario(UsuarioRequest usuarioRequest);
+
+    UsuarioResponse buscarUsuario(String numeroDocumento);
 }
