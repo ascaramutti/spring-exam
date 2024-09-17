@@ -1,6 +1,5 @@
 package com.spring.exam.spring_exam.service.impl;
 
-import com.spring.exam.spring_exam.aggregates.mapper.UsuarioMapper;
 import com.spring.exam.spring_exam.aggregates.response.UsuarioResponse;
 import com.spring.exam.spring_exam.entity.UsuarioEntity;
 import com.spring.exam.spring_exam.redis.RedisService;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
+import static com.spring.exam.spring_exam.aggregates.mapper.UsuarioMapper.mapToUsuarioResponse;
 import static com.spring.exam.spring_exam.util.RedisUtil.parseFromString;
 import static com.spring.exam.spring_exam.util.RedisUtil.parseToString;
 import static com.spring.exam.spring_exam.util.constans.ServiceConstant.REDIS_EXPIRATION_TIME;
@@ -28,7 +28,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public UsuarioResponse buscarUsuario(String numeroDocumento) {
-        return UsuarioMapper.mapToUsuarioResponse(getUsuario(numeroDocumento));
+        return getUsuario(numeroDocumento);
     }
 
     @Override
@@ -42,16 +42,16 @@ public class UsuarioServiceImpl implements UsuarioService {
         };
     }
 
-    private UsuarioEntity getUsuario(String numeroDocumento) {
+    private UsuarioResponse getUsuario(String numeroDocumento) {
         String redisInfo = redisService.getDataFromRedis(REDIS_KEY_API_USER+numeroDocumento);
         if(Objects.nonNull(redisInfo)){
-            return parseFromString(redisInfo, UsuarioEntity.class);
+            return parseFromString(redisInfo, UsuarioResponse.class);
         } else {
             UsuarioEntity response= usuarioRepository.findByNumeroDocumento(numeroDocumento)
                     .orElseThrow(() -> new RuntimeException("PERSONA NO ENCONTRADA"));
             String dataForRedis = parseToString(response);
             redisService.saveInRedis(REDIS_KEY_API_USER+numeroDocumento, dataForRedis, REDIS_EXPIRATION_TIME);
-            return response;
+            return mapToUsuarioResponse(response);
         }
     }
 }

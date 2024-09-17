@@ -35,7 +35,7 @@ public class JwtAuthenticatorFilter extends OncePerRequestFilter {
         final String tokenLimpio;
         final String userEmail;
 
-        if(StringUtils.isEmpty(tokenExtraidoHeader) || StringUtils.startsWithIgnoreCase(tokenExtraidoHeader, HEADER_TOKEN)){
+        if(StringUtils.isEmpty(tokenExtraidoHeader) || !StringUtils.startsWithIgnoreCase(tokenExtraidoHeader, HEADER_TOKEN)){
             filterChain.doFilter(request, response);
             return;
         }
