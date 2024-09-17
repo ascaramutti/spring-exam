@@ -6,8 +6,6 @@ import com.spring.exam.spring_exam.entity.UsuarioEntity;
 import com.spring.exam.spring_exam.redis.RedisService;
 import com.spring.exam.spring_exam.repository.UsuarioRepository;
 import com.spring.exam.spring_exam.service.UsuarioService;
-import com.spring.exam.spring_exam.service.retrofit.ReniecApiService;
-import com.spring.exam.spring_exam.service.retrofit.impl.ReniecApiServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,7 +25,6 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final RedisService redisService;
-    ReniecApiService reniecApiServiceRetroFit = ReniecApiServiceImpl.getClient().create(ReniecApiService.class);
 
     @Override
     public UsuarioResponse buscarUsuario(String numeroDocumento) {

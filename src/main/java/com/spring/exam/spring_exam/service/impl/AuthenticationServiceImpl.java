@@ -11,12 +11,16 @@ import com.spring.exam.spring_exam.entity.UsuarioEntity;
 import com.spring.exam.spring_exam.repository.RolRepository;
 import com.spring.exam.spring_exam.repository.UsuarioRepository;
 import com.spring.exam.spring_exam.service.AuthenticationService;
+import com.spring.exam.spring_exam.service.JwtService;
 import com.spring.exam.spring_exam.service.retrofit.ReniecApiService;
 import com.spring.exam.spring_exam.service.retrofit.impl.ReniecApiServiceImpl;
 import com.spring.exam.spring_exam.util.enums.Role;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
@@ -34,11 +38,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UsuarioRepository usuarioRepository;
     private final RolRepository rolRepository;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+    ReniecApiService reniecApiServiceRetroFit = ReniecApiServiceImpl.getClient().create(ReniecApiService.class);
 
     @Value("${token.api}")
     private String tokenApi;
-    ReniecApiService reniecApiServiceRetroFit = ReniecApiServiceImpl.getClient().create(ReniecApiService.class);
     @Override
+    @Transactional
     public UsuarioResponse singUpUser(UsuarioRequest usuarioRequest) {
         try {
             UsuarioEntity usuario = getUsuarioRetrofit(usuarioRequest);
@@ -52,8 +59,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public SignInResponse singIn(SignInRequest signInRequest) {
-        return null;
+    public SignInResponse signIn(SignInRequest signInRequest) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                signInRequest.getEmail(),signInRequest.getPassword()));
+        var user = usuarioRepository.findByEmail(signInRequest.getEmail())
+                .orElseThrow(()-> new IllegalArgumentException("ERROR USUARIO NO ENCONTRADO"));
+        var token = jwtService.generateToken(user);
+        SignInResponse response = new SignInResponse();
+        response.setToken(token);
+        return response;
     }
 
     private UsuarioEntity getUsuarioRetrofit(UsuarioRequest usuarioRequest) throws IOException {

@@ -9,6 +9,6 @@ public interface AuthenticationService {
 
     UsuarioResponse singUpUser(UsuarioRequest usuarioRequest);
 
-    SignInResponse singIn(SignInRequest signInRequest);
+    SignInResponse signIn(SignInRequest signInRequest);
 
 }

@@ -1,6 +1,8 @@
 package com.spring.exam.spring_exam.controller;
 
+import com.spring.exam.spring_exam.aggregates.request.SignInRequest;
 import com.spring.exam.spring_exam.aggregates.request.UsuarioRequest;
+import com.spring.exam.spring_exam.aggregates.response.SignInResponse;
 import com.spring.exam.spring_exam.aggregates.response.UsuarioResponse;
 import com.spring.exam.spring_exam.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
@@ -21,5 +23,10 @@ public class AuthenticationController {
     @PostMapping("/signupuser")
     public ResponseEntity<UsuarioResponse> signUpUser(@RequestBody UsuarioRequest usuarioRequest){
         return new ResponseEntity<>(authenticationService.singUpUser(usuarioRequest), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/signin")
+    public ResponseEntity<SignInResponse> signIn(@RequestBody SignInRequest signInRequest){
+        return ResponseEntity.ok(authenticationService.signIn(signInRequest));
     }
 }
