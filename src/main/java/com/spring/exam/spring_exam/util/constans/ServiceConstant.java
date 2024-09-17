@@ -9,4 +9,8 @@ public class ServiceConstant {
     public static final String REDIS_KEY_API_USER = "MS:SPRING:EXAM:";
 
     public static final Integer REDIS_EXPIRATION_TIME = 5;
+
+    public static final String ENDPOINTS_PERMIT = "api/authentication/v1/**";
+
+    public static final String ENDPOINT_USER = "/api/users/v1/**";
 }
