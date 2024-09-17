@@ -18,8 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static com.spring.exam.spring_exam.util.constans.ServiceConstant.ENDPOINTS_PERMIT;
-import static com.spring.exam.spring_exam.util.constans.ServiceConstant.ENDPOINT_USER;
+import static com.spring.exam.spring_exam.util.constans.ServiceConstant.*;
 
 @Configuration
 @EnableWebSecurity
@@ -33,8 +32,9 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(ENDPOINTS_PERMIT).permitAll()
-                        .requestMatchers(ENDPOINT_USER).hasAnyAuthority(Role.USER.name())
+                        .requestMatchers(REGISTER_PERMIT).permitAll()
+                        .requestMatchers(LOGIN_PERMIT).permitAll()
+                        .requestMatchers(USERS_ENDPOINT).hasAnyAuthority(Role.USER.name())
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticatorFilter, UsernamePasswordAuthenticationFilter.class);

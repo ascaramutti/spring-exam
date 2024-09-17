@@ -10,7 +10,9 @@ public class ServiceConstant {
 
     public static final Integer REDIS_EXPIRATION_TIME = 5;
 
-    public static final String ENDPOINTS_PERMIT = "api/authentication/v1/**";
+    public static final String REGISTER_PERMIT = "api/v1/users/register";
 
-    public static final String ENDPOINT_USER = "/api/users/v1/**";
+    public static final String LOGIN_PERMIT = "api/v1/users/login";
+
+    public static final String USERS_ENDPOINT = "api/v1/users/**";
 }

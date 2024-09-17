@@ -1,5 +1,6 @@
 package com.spring.exam.spring_exam.service.impl;
 
+import com.spring.exam.spring_exam.aggregates.mapper.UsuarioMapper;
 import com.spring.exam.spring_exam.aggregates.response.UsuarioResponse;
 import com.spring.exam.spring_exam.entity.UsuarioEntity;
 import com.spring.exam.spring_exam.redis.RedisService;
@@ -11,7 +12,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.spring.exam.spring_exam.aggregates.mapper.UsuarioMapper.mapToUsuarioResponse;
 import static com.spring.exam.spring_exam.util.RedisUtil.parseFromString;
@@ -40,6 +43,21 @@ public class UsuarioServiceImpl implements UsuarioService {
                         .orElseThrow(() -> new UsernameNotFoundException("USUARIO NO ENCONTRADO"));
             }
         };
+    }
+
+    @Override
+    public List<UsuarioResponse> listarUsuarios() {
+        List<UsuarioEntity> usuarioEntityList = usuarioRepository.findAll();
+        return usuarioEntityList.stream()
+                .map(UsuarioMapper::mapToUsuarioResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void eliminarUsuario(Long id) {
+        UsuarioEntity usuarioEntity = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("USUARIO NO EXISTENTE EN LA BASE DE DATOS"));
+        usuarioRepository.deleteById(id);
     }
 
     private UsuarioResponse getUsuario(String numeroDocumento) {
