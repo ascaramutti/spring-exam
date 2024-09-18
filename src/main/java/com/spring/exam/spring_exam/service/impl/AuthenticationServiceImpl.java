@@ -41,9 +41,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     ReniecApiService reniecApiServiceRetroFit = ReniecApiServiceImpl.getClient().create(ReniecApiService.class);
-
     @Value("${token.api}")
     private String tokenApi;
+
     @Override
     @Transactional
     public UsuarioResponse singUpUser(UsuarioRequest usuarioRequest) {

@@ -1,15 +1,18 @@
 package com.spring.exam.spring_exam.service.impl;
 
 import com.spring.exam.spring_exam.aggregates.mapper.UsuarioMapper;
+import com.spring.exam.spring_exam.aggregates.request.UsuarioRequest;
 import com.spring.exam.spring_exam.aggregates.response.UsuarioResponse;
 import com.spring.exam.spring_exam.entity.UsuarioEntity;
 import com.spring.exam.spring_exam.redis.RedisService;
 import com.spring.exam.spring_exam.repository.UsuarioRepository;
 import com.spring.exam.spring_exam.service.UsuarioService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,10 +57,21 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
+    @Transactional
     public void eliminarUsuario(Long id) {
         UsuarioEntity usuarioEntity = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("USUARIO NO EXISTENTE EN LA BASE DE DATOS"));
         usuarioRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public UsuarioEntity actualizarUsuario(Long id, UsuarioRequest usuarioRequest) {
+        UsuarioEntity usuarioEntity = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("USUARIO NO EXISTENTE EN LA BASE DE DATOS"));
+        usuarioEntity.setEmail(usuarioRequest.getEmail());
+        usuarioEntity.setPassword(new BCryptPasswordEncoder().encode(usuarioRequest.getPassword()));
+        return usuarioEntity;
     }
 
     private UsuarioResponse getUsuario(String numeroDocumento) {

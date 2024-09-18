@@ -10,4 +10,5 @@ public class UsuarioResponse {
     private Long id;
     private String nombres;
     private String apellidos;
+    private String email;
 }

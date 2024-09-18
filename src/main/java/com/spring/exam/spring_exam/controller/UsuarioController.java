@@ -4,6 +4,7 @@ import com.spring.exam.spring_exam.aggregates.request.SignInRequest;
 import com.spring.exam.spring_exam.aggregates.request.UsuarioRequest;
 import com.spring.exam.spring_exam.aggregates.response.SignInResponse;
 import com.spring.exam.spring_exam.aggregates.response.UsuarioResponse;
+import com.spring.exam.spring_exam.entity.UsuarioEntity;
 import com.spring.exam.spring_exam.service.AuthenticationService;
 import com.spring.exam.spring_exam.service.UsuarioService;
 import lombok.AllArgsConstructor;
@@ -22,12 +23,12 @@ public class UsuarioController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ResponseEntity<UsuarioResponse> signUpUser(@RequestBody UsuarioRequest usuarioRequest){
+    public ResponseEntity<UsuarioResponse> signUpUser(@RequestBody UsuarioRequest usuarioRequest) {
         return new ResponseEntity<>(authenticationService.singUpUser(usuarioRequest), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<SignInResponse> signIn(@RequestBody SignInRequest signInRequest){
+    public ResponseEntity<SignInResponse> signIn(@RequestBody SignInRequest signInRequest) {
         return ResponseEntity.ok(authenticationService.signIn(signInRequest));
     }
 
@@ -42,9 +43,15 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> borrarUsuario(@PathVariable("id") Long id){
+    public ResponseEntity<String> borrarUsuario(@PathVariable("id") Long id) {
         usuarioService.eliminarUsuario(id);
         return ResponseEntity.ok("Usuario eliminado.");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UsuarioEntity> actualizarUsuario(@PathVariable("id") Long id,
+                                                           @RequestBody UsuarioRequest usuarioRequest){
+        return ResponseEntity.ok(usuarioService.actualizarUsuario(id, usuarioRequest));
     }
 
 }

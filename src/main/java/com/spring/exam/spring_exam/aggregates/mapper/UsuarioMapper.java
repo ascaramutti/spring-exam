@@ -10,6 +10,7 @@ public class UsuarioMapper {
         usuarioResponse.setId(usuarioEntity.getId());
         usuarioResponse.setApellidos(usuarioEntity.getApellidoPaterno().concat(" ").concat(usuarioEntity.getApellidoMaterno()));
         usuarioResponse.setNombres(usuarioEntity.getNombres());
+        usuarioResponse.setEmail(usuarioEntity.getEmail());
         return usuarioResponse;
     }
 }
